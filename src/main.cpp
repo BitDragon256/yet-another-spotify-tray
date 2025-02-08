@@ -28,6 +28,11 @@ void sigHandler(int signal) {
 }
 
 int main(int argc, char** argv) {
+    const char* session_type = getenv("XDG_SESSION_TYPE");
+    if (session_type != nullptr && std::string(session_type) == "wayland") {
+	setenv("XDG_SESSION_TYPE", "x11", 1);
+    }
+
     unsigned long pid = 0;
     if (mutex.attach() && mutex.lock()) {
         pid = *reinterpret_cast<unsigned long*>(mutex.data());
